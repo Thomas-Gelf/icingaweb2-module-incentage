@@ -84,22 +84,25 @@ class DirectorController extends ControllerBase
             $line = null;
             $lines[] = $this->normalizeSimpleXML($entry);
         }
-
         ImportSource::$pushedData = $lines;
     }
 
-    /**
-     * @param SimpleXMLElement $obj
-     * @return object
-     */
-    protected function normalizeSimpleXML(SimpleXMLElement $object)
+    protected function normalizeSimpleXML($object)
     {
-        $data = (object) array();
-        foreach ($object as $key => $value) {
-            if ($value instanceof SimpleXMLElement) {
+        $data = $object;
+        if (\is_object($data)) {
+            $data = (object) \get_object_vars($data);
+        }
+
+        if (\is_object($data)) {
+            foreach ($data as $key => $value) {
                 $data->$key = $this->normalizeSimpleXml($value);
-            } else {
-                $data->$key = $value;
+            }
+        }
+
+        if (\is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->normalizeSimpleXml($value);
             }
         }
 
