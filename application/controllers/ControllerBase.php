@@ -100,7 +100,7 @@ class ControllerBase extends CompatController
         // TODO: getServerVar('SSL_CLIENT_VERIFY') === 'SUCCESS'? Depends on config
         $allowed = \preg_split(
             '/\s*,\s*/',
-            $this->Config('api')->get('ssl', 'allow_cn', ''),
+            $this->Config()->get('ssl', 'allow_cn', ''),
             -1,
             PREG_SPLIT_NO_EMPTY
         );

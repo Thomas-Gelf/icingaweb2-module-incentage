@@ -23,7 +23,7 @@ As no ACLs are applied, access to this feature is granted:
 * with a white-listed CN (Common Name)
 
 Please configure such a white-list in your modules api.ini file. This is usually
-`/etc/icingaweb2/modules/eventtracker/api.ini`:
+`/etc/icingaweb2/modules/incentage/config.ini`:
 
 ```ini
 [ssl]
