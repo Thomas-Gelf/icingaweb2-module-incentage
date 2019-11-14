@@ -2,8 +2,12 @@
 
 namespace Icinga\Module\Eventtracker\Controllers;
 
+use Icinga\Application\Icinga;
 use Icinga\Module\Eventtracker\DbFactory;
+use Icinga\Module\Eventtracker\EventReceiver;
 use Icinga\Module\Eventtracker\Issues;
+use Icinga\Module\Eventtracker\ObjectClassInventory;
+use Icinga\Module\Eventtracker\Scom\IncentageEventFactory;
 use Icinga\Module\Incentage\IdoHelper;
 use ipl\Html\Html;
 
@@ -11,6 +15,20 @@ class EventtrackerController extends ControllerBase
 {
     /** @var Issues */
     protected $issues;
+
+    /**
+     * @throws \Icinga\Exception\ProgrammingError
+     */
+    public function init()
+    {
+        parent::init();
+        if (! Icinga::app()->getModuleManager()->hasLoaded('eventtracker')) {
+            $this->fail(
+                404,
+                'This URL is not available without the eventtracker being enabled'
+            );
+        }
+    }
 
     public function issuesAction()
     {
@@ -85,14 +103,24 @@ class EventtrackerController extends ControllerBase
             if ($this->ido()->hasObject($object)) {
                 // not yet
             }
-            /*
-            if ($result === false) {
-                $tag->add(Html::tag('success', 'true'));
+
+            $db = DbFactory::db();
+            $factory = new IncentageEventFactory(
+                $this->Config()->get('eventtracker', 'sender_name', 'Incentage'),
+                new ObjectClassInventory($db)
+            );
+            list($host, $service) = IdoHelper::splitHostService($object);
+            $event = $factory->create($host, $service, $message, $path);
+            $receiver = new EventReceiver($db);
+            $issue = $receiver->processEvent($event);
+            $tag->add(Html::tag('success', 'true'));
+            if ($issue) {
+                $tag->add(Html::tag('isIssue', 'true'));
+                $tag->add(Html::tag('isNew', $issue->isNew() ? 'true' : 'false'));
             } else {
-                $tag->add(Html::tag('success', 'false'));
-                $tag->add(Html::tag('reason', 'Object not found'));
+                $tag->add(Html::tag('isIssue', 'false'));
             }
-            */
+
             echo $tag;
             $this->finish();
         } catch (\Exception $e) {
