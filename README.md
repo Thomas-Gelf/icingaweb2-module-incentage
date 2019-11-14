@@ -98,6 +98,19 @@ Content-Type: text/html; charset=UTF-8
 <error>SSL CN 'attacker.example.com' is not allowed to access this resource</error>
 ```
 
+Available Requests
+------------------
+
+The `<base url>` is usually `/icingaweb2/incentage`.
+
+| Method | Relative Url        | Params | Description                               |
+|--------|---------------------|--------|-------------------------------------------|
+| GET    | icinga/status       | object | Get the status of an Icinga object        |
+| POST   | icinga/status       | (body) | Set the Icinga status for an object       |
+| GET    | eventtracker/issues | object | Get current eventtracker issues           |
+| POST   | eventtracker/issue  | (body) | Create (or refresh) an eventtracker issue |
+
+
 Full examples
 -------------
 
@@ -152,6 +165,47 @@ Response Body:
 <output>FS CRITICAL - free space: /var/log</output></result>
 ```
 
+### Eventtracker Issues
+
+In addition to the rules regarding the `object` parameter explained above,
+this endpoint also accepts `object=host!*`. If no service is given, only
+Host problems are shown. If a wildcard (`*`) service is given, all issues
+related to that Host are shown.
+
+```
+GET https://icinga.example.com/icingaweb2/incentage/eventtracker/issues?object=some.example.com\!\*
+```
+
+```html
+<result>
+<issues>
+<issue>
+<uuid>73acf0f5-bb6a-42ea-583a-f847d14adc1f</uuid>
+<status>open</status>
+<severity>critical</severity>
+<host_name>some.example.com</host_name>
+<object_name>AD Domain Availability Health Degraded</object_name>
+<object_class>Microsoft.Windows.Server.AD.ServiceComponent</object_class>
+<message>More than 60% of the DCs contained in this AD Domain report an Availability Health problem</message>
+<ticket_ref></ticket_ref></issue>
+<issue>
+<uuid>7905366e-8ba4-e3a2-9866-ecf5464d1b3a</uuid>
+<status>open</status>
+<severity>critical</severity>
+<host_name>some.example.com</host_name>
+<object_name>AD Domain Availability Health Degraded</object_name>
+<object_class>Microsoft.Windows.Server.AD.Library.ServiceComponent</object_class>
+<message>More than 60% of the DCs contained in this AD Domain report an Availability Health problem</message>
+<ticket_ref></ticket_ref></issue></issues>
+<isIcingaObject>false</isIcingaObject>
+</result>
+```
+
+The result also contains an `icIcingaObject` tag. It tells whether a related
+Icinga object exists.
+
+Generic Errors
+--------------
 
 ### SSL Certificate not in white-list
 
