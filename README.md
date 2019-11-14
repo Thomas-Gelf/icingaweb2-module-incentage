@@ -208,17 +208,22 @@ Icinga object exists.
 ### Director Import
 
 This module allows to actively push data for a configured Import Source. To get
-this running, you need to:
-
-* Create a new Import Source, type "Incentage On-Demand Import"
-* In your `modules/incentage/config.ini`, allow access to this source:
+this running, you need to create a new Import Source, type "Incentage On-Demand
+Import". In your `modules/incentage/config.ini`, allow access to this source:
 
 ```ini
 [director]
 importsource = "Newly created Import Source"
 ```
 
-* Send an XML body similar to the following one:
+As long as you don't grant access to a specific Import Source, you'll get an
+error message:
+
+```xml
+<error>No access to a Director Import Source has been granted</error>
+```
+
+Now you're ready to send an XML body similar to the following one:
 
 ```xml
 <Icinga>
@@ -241,6 +246,45 @@ When defining your related Sync Rule, please do not forget to import a Service
 Template with `max_check_attempts = 1`.
 
 Once you're ready, please send your HTTP POST to `incentage/director/import`.
+The result might look as follows:
+
+```xml
+<result>
+<success>true</success>
+<importedChanges>true</importedChanges>
+<message>Modified objects have been imported</message>
+<syncRuleFound>false</syncRuleFound></result>
+```
+
+In case the imported data didn't differ from the last import, the output differs:
+
+```xml
+<result>
+<success>true</success>
+<importedChanges>false</importedChanges>
+<message>Nothing has been changed, imported data is still up to date</message>
+<syncRuleFound>false</syncRuleFound></result>
+```
+
+Now when there is exactly one Sync Rule using properties from your Import
+Source, an immediate Sync will be triggered. In this case, the result provides
+more details:
+
+```xml
+<result>
+<success>true</success>
+<importedChanges>false</importedChanges>
+<message>Modified objects have been imported</message>
+<syncRuleFound>true</syncRuleFound>
+<synchronizedChanges>true</synchronizedChanges>
+<objectsCreated>41</objectsCreated>
+<objectsModified>2</objectsModified>
+<objectsDeleted>5</objectsDeleted>
+</result>
+```
+
+The objects* properties will only show up if synchronizedChanges is true.
+
 
 Generic Errors
 --------------
