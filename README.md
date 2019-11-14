@@ -205,6 +205,43 @@ GET https://icinga.example.com/icingaweb2/incentage/eventtracker/issues?object=s
 The result also contains an `isIcingaObject` tag. It tells whether a related
 Icinga object exists.
 
+### Director Import
+
+This module allows to actively push data for a configured Import Source. To get
+this running, you need to:
+
+* Create a new Import Source, type "Incentage On-Demand Import"
+* In your `modules/incentage/config.ini`, allow access to this source:
+
+```ini
+[director]
+importsource = "Newly created Import Source"
+```
+
+* Send an XML body similar to the following one:
+
+```xml
+<Icinga>
+  <Service>
+    <Name>Test Service</Name>
+    <Path>/Some/Where/There</Path>
+  </Service>
+  <Service>
+    <Name>Anothoer Service</Name>
+    <Path>/Some/Where/Else</Path>
+  </Service>
+</Icinga>
+```
+
+As Service objects have `host!service`-like keys, please do not forget to define
+a related Property Modifier, write the combined key to a dedicated target column
+and use that column as your Key Column.
+
+When defining your related Sync Rule, please do not forget to import a Service
+Template with `max_check_attempts = 1`.
+
+Once you're ready, please send your HTTP POST to `incentage/director/import`.
+
 Generic Errors
 --------------
 
