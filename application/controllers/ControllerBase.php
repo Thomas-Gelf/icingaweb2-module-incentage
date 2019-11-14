@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Eventtracker\Controllers;
+namespace Icinga\Module\Incentage\Controllers;
 
 use gipfl\IcingaWeb2\CompatController;
 use Icinga\Exception\ConfigurationError;

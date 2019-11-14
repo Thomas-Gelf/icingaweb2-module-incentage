@@ -1,6 +1,6 @@
 <?php
 
-namespace Icinga\Module\Eventtracker\Controllers;
+namespace Icinga\Module\Incentage\Controllers;
 
 use ipl\Html\Html;
 
