@@ -109,6 +109,7 @@ The `<base url>` is usually `/icingaweb2/incentage`.
 | POST   | icinga/status       | (body) | Set the Icinga status for an object       |
 | GET    | eventtracker/issues | object | Get current eventtracker issues           |
 | POST   | eventtracker/issue  | (body) | Create (or refresh) an eventtracker issue |
+| POST   | director/import     | (body) | Trigger a defined Import Source with the given data |
 
 
 Full examples
