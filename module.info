@@ -1,0 +1,11 @@
+Name: Incentage
+Version: 0.4.0
+Depends: ipl (>=0.3.0), incubator (>=0.5.0)
+Description: Icinga API proxy module for the Incentage Middleware Suite
+ For a special use-case this module provides a simple proxy API for
+ special parts of Icinga. It's purpose is to grant unfiltered access to
+ the current monitoring state of specific Hosts or Services and to grant
+ access to issues in the Icinga Eventtracker module
+
+ The main use-case for this was an integration with the IPC Incentage
+ Process Cockpit, serving requests from the Incentage Middleware Suite.
