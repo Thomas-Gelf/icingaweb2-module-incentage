@@ -202,7 +202,7 @@ GET https://icinga.example.com/icingaweb2/incentage/eventtracker/issues?object=s
 </result>
 ```
 
-The result also contains an `icIcingaObject` tag. It tells whether a related
+The result also contains an `isIcingaObject` tag. It tells whether a related
 Icinga object exists.
 
 Generic Errors
