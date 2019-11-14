@@ -2,8 +2,6 @@
 
 namespace Icinga\Module\Incentage\ProvidedHook\Director;
 
-use Icinga\Exception\ConfigurationError;
-use Icinga\Exception\IcingaException;
 use Icinga\Module\Director\Hook\ImportSourceHook;
 use RuntimeException;
 
@@ -20,8 +18,6 @@ class ImportSource extends ImportSourceHook
 
     /**
      * @return object[]
-     * @throws ConfigurationError
-     * @throws IcingaException
      */
     public function fetchData()
     {
@@ -34,8 +30,6 @@ class ImportSource extends ImportSourceHook
 
     /**
      * @return array
-     * @throws ConfigurationError
-     * @throws IcingaException
      */
     public function listColumns()
     {
