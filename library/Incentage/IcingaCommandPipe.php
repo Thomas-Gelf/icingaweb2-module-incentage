@@ -2,28 +2,25 @@
 
 namespace Icinga\Module\Incentage;
 
+use Icinga\Exception\NotFoundError;
 use Icinga\Module\Monitoring\Backend;
 use Icinga\Module\Monitoring\Command\Object\AcknowledgeProblemCommand;
 use Icinga\Module\Monitoring\Command\Object\ProcessCheckResultCommand;
 use Icinga\Module\Monitoring\Command\Transport\CommandTransport;
 use Icinga\Module\Monitoring\Object\Host;
 use Icinga\Module\Monitoring\Object\Service;
-use Icinga\Exception\IcingaException;
 
 class IcingaCommandPipe
 {
     public function setStatus($status, $output, $host, $service = null)
     {
         $object = $this->getObject($host, $service);
+        $status = $this->mapStatus($status, $service === null);
 
         $cmd = new ProcessCheckResultCommand();
         $cmd->setObject($object)
             ->setOutput($output)
-            ->setStatus(
-                $status === 'OK'
-                    ? ProcessCheckResultCommand::SERVICE_OK
-                    : ProcessCheckResultCommand::SERVICE_CRITICAL
-            )
+            ->setStatus($status)
         ;
 
         $transport = new CommandTransport();
@@ -68,7 +65,7 @@ class IcingaCommandPipe
         $host = new Host(Backend::instance(), $hostname);
 
         if ($host->fetch() === false) {
-            throw new IcingaException('No such host found: %s', $hostname);
+            throw new NotFoundError('No such host found: %s', $hostname);
         }
 
         return $host;
@@ -79,7 +76,7 @@ class IcingaCommandPipe
         $service = new Service(Backend::instance(), $hostname, $service);
 
         if ($service->fetch() === false) {
-            throw new IcingaException(
+            throw new NotFoundError(
                 'No service "%s" found on host "%s"',
                 $service,
                 $hostname
@@ -87,5 +84,23 @@ class IcingaCommandPipe
         }
 
         return $service;
+    }
+
+    protected function mapStatus($status, $isHost)
+    {
+        if ($isHost) {
+            return $status === 'OK'
+                ? ProcessCheckResultCommand::HOST_UP
+                : ProcessCheckResultCommand::HOST_DOWN;
+        } else {
+            switch ($status) {
+                case 'OK':
+                    return ProcessCheckResultCommand::SERVICE_OK;
+                case 'WARN':
+                    return ProcessCheckResultCommand::SERVICE_WARNING;
+                default:
+                    return ProcessCheckResultCommand::SERVICE_CRITICAL;
+            }
+        }
     }
 }

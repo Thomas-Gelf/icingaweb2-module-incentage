@@ -54,7 +54,7 @@ class IcingaController extends ControllerBase
             $tag = Html::tag('result')->setSeparator("\r\n");
             $cmd = new IcingaCommandPipe();
             $cmd->setStatus($state, $message, $host, $service);
-            if ($result === false) {
+            if ($result === true) {
                 $tag->add(Html::tag('success', 'true'));
             } else {
                 $tag->add(Html::tag('success', 'false'));
