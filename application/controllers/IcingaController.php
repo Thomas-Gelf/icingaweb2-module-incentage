@@ -2,6 +2,8 @@
 
 namespace Icinga\Module\Incentage\Controllers;
 
+use Icinga\Module\Incentage\IcingaCommandPipe;
+use Icinga\Module\Incentage\IdoHelper;
 use ipl\Html\Html;
 
 class IcingaController extends ControllerBase
@@ -36,6 +38,7 @@ class IcingaController extends ControllerBase
         $object = $request->getPost('Object');
         $state = $request->getPost('State');
         $message = $request->getPost('Message');
+        list($host, $service) = IdoHelper::splitHostService($object);
         $path = $request->getPost('Path');
         if ($object === null) {
             $this->fail(400, "Parameter 'Object' is missing");
@@ -49,6 +52,8 @@ class IcingaController extends ControllerBase
         try {
             $result = $this->ido()->hasObject($object);
             $tag = Html::tag('result')->setSeparator("\r\n");
+            $cmd = new IcingaCommandPipe();
+            $cmd->setStatus($state, $message, $host, $service);
             if ($result === false) {
                 $tag->add(Html::tag('success', 'true'));
             } else {
