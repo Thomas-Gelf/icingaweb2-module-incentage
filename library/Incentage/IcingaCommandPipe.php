@@ -99,6 +99,7 @@ class IcingaCommandPipe
                     return ProcessCheckResultCommand::SERVICE_OK;
                 case 'PARTIAL':
                 case 'WARN':
+                case 'WARNING':
                     return ProcessCheckResultCommand::SERVICE_WARNING;
                 default:
                     return ProcessCheckResultCommand::SERVICE_CRITICAL;
