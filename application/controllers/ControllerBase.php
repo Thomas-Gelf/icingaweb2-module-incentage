@@ -3,6 +3,7 @@
 namespace Icinga\Module\Incentage\Controllers;
 
 use gipfl\IcingaWeb2\CompatController;
+use Icinga\Application\Logger;
 use Icinga\Exception\ConfigurationError;
 use Icinga\Module\Incentage\IdoHelper;
 use ipl\Html\Html;
@@ -60,6 +61,7 @@ class ControllerBase extends CompatController
 
     protected function fail($code, $message)
     {
+        Logger::error("incentage ($code): $message");
         $this->showError($message);
         try {
             $this->getResponse()->setHttpResponseCode($code);

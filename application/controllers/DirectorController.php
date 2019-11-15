@@ -39,7 +39,7 @@ class DirectorController extends ControllerBase
         try {
             $result = Html::tag('result')->setSeparator("\r\n");;
             $importSource = $this->requireImportSource();
-            if (null === ($body = $this->getRequest()->getPost('body'))) {
+            if (null === ($body = $request->getPost('body'))) {
                 $body = $request->getRawBody();
             }
             $this->importXml($body);
