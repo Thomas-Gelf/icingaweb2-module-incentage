@@ -88,6 +88,7 @@ class IcingaCommandPipe
 
     protected function mapStatus($status, $isHost)
     {
+        $status = \strtoupper($status);
         if ($isHost) {
             return $status === 'OK'
                 ? ProcessCheckResultCommand::HOST_UP
@@ -96,6 +97,7 @@ class IcingaCommandPipe
             switch ($status) {
                 case 'OK':
                     return ProcessCheckResultCommand::SERVICE_OK;
+                case 'PARTIAL':
                 case 'WARN':
                     return ProcessCheckResultCommand::SERVICE_WARNING;
                 default:
