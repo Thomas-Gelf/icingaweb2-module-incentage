@@ -71,14 +71,14 @@ class IcingaCommandPipe
         return $host;
     }
 
-    protected function getServiceObject($hostname, $service)
+    protected function getServiceObject($hostname, $serviceName)
     {
-        $service = new Service(Backend::instance(), $hostname, $service);
+        $service = new Service(Backend::instance(), $hostname, $serviceName);
 
         if ($service->fetch() === false) {
             throw new NotFoundError(
                 'No service "%s" found on host "%s"',
-                $service,
+                $serviceName,
                 $hostname
             );
         }
