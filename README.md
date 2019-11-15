@@ -238,6 +238,9 @@ Now you're ready to send an XML body similar to the following one:
 </Icinga>
 ```
 
+In case sending a raw body is not supported by your client, please use a POST
+parameter named `body` to ship your XML file.
+
 As Service objects have `host!service`-like keys, please do not forget to define
 a related Property Modifier, write the combined key to a dedicated target column
 and use that column as your Key Column.
