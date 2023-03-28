@@ -5,6 +5,8 @@ namespace Icinga\Module\Eventtracker\Scom;
 use Icinga\Module\Eventtracker\Event;
 use Icinga\Module\Eventtracker\ObjectClassInventory;
 
+use function substr;
+
 class IncentageEventFactory
 {
     protected $senderId;
@@ -19,8 +21,7 @@ class IncentageEventFactory
 
     public function create($host, $object, $message, $path = null)
     {
-        $event = new Event();
-        $event->setProperties([
+        $event = Event::create([
             'host_name'       => $host,
             'object_name'     => $this->objectName($object),
             // 'object_class'    => $this->classInventory->requireClass(substr($obj->entity_base_type, 0, 128)),
@@ -40,9 +41,9 @@ class IncentageEventFactory
     protected function objectName($name)
     {
         if ($name === null) {
-            return $name;
-        } else {
-            return \substr($name, 0, 128);
+            return null;
         }
+
+        return substr($name, 0, 128);
     }
 }
