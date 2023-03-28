@@ -318,3 +318,10 @@ Content-Type: text/html; charset=UTF-8
 
 <error>SQLSTATE[42S02]: Base table or view not found: 1146 Table 'icinga2.nowhere' doesn't exist, query was: SELECT invalid FROM nowhere</error>
 ```
+
+Changes
+-------
+
+### v0.5.0
+* works with Eventtracker v0.10+
+* fixes problems with newer Icinga Web 2 versions
