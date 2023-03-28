@@ -3,7 +3,7 @@
 namespace Icinga\Module\Incentage;
 
 use Icinga\Exception\NotFoundError;
-use Icinga\Module\Monitoring\Backend;
+use Icinga\Module\Monitoring\Backend\MonitoringBackend;
 use Icinga\Module\Monitoring\Command\Object\AcknowledgeProblemCommand;
 use Icinga\Module\Monitoring\Command\Object\ProcessCheckResultCommand;
 use Icinga\Module\Monitoring\Command\Transport\CommandTransport;
@@ -62,7 +62,7 @@ class IcingaCommandPipe
 
     protected function getHostObject($hostname)
     {
-        $host = new Host(Backend::instance(), $hostname);
+        $host = new Host(MonitoringBackend::instance(), $hostname);
 
         if ($host->fetch() === false) {
             throw new NotFoundError('No such host found: %s', $hostname);
@@ -73,7 +73,7 @@ class IcingaCommandPipe
 
     protected function getServiceObject($hostname, $serviceName)
     {
-        $service = new Service(Backend::instance(), $hostname, $serviceName);
+        $service = new Service(MonitoringBackend::instance(), $hostname, $serviceName);
 
         if ($service->fetch() === false) {
             throw new NotFoundError(
